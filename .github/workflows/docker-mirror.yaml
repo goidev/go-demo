@@ -1,0 +1,26 @@
+name: Docker Mirror
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  mirror-docker-image:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Pull Docker image from Docker Hub
+        run: docker pull golang:1.21-alpine
+
+      - name: Tag Docker image for Aliyun
+        run: docker tag golang:1.21-alpine registry.cn-hangzhou.aliyuncs.com/ops_containers/golang:1.21-alpine
+
+      - name: Log in to Aliyun Docker registry
+        run: echo "${{ secrets.ALIYUN_DOCKER_PASSWORD }}" | docker login --username="${{ secrets.ALIYUN_DOCKER_USERNAME }}" registry.cn-hangzhou.aliyuncs.com --password-stdin
+
+      - name: Push Docker image to Aliyun
+        run: docker push registry.cn-hangzhou.aliyuncs.com/ops_containers/golang:1.21-alpine

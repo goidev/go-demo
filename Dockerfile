@@ -1,5 +1,5 @@
 # 使用官方的 Go 语言镜像作为基础镜像
-FROM golang:1.21-alpine AS build
+FROM registry.cn-hangzhou.aliyuncs.com/ops_containers/golang:1.21-alpine AS build
 
 # 设置环境变量
 ENV GO111MODULE=on
@@ -15,7 +15,7 @@ RUN go mod tidy && go build -v -o go-demo .
 
 
 # 使用更小的镜像作为运行环境
-FROM alpine:latest
+FROM registry.cn-hangzhou.aliyuncs.com/ops_containers/alpine:latest
 
 # 设置工作目录
 WORKDIR /app/
